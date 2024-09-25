@@ -1,1 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora de NPK</title>
+    <style>
+        /* Estilos CSS irán aquí */
+    </style>
+</head>
+<body>
+    <h1>Calculadora de NPK</h1>
 
+    <!-- Sección de Materias Primas -->
+    <h2>Materias Primas</h2>
+    <div id="materias-primas">
+        <!-- Formulario para añadir materias primas -->
+        <div>
+            <h3>Añadir Materia Prima</h3>
+            <input type="text" id="mp-nombre" placeholder="Nombre del producto">
+            <input type="number" id="mp-nitrogeno" placeholder="Nitrógeno (%)">
+            <input type="number" id="mp-fosforo" placeholder="Fósforo (%)">
+            <input type="number" id="mp-potasio" placeholder="Potasio (%)">
+            <input type="number" id="mp-materia-organica" placeholder="Materia Orgánica (%)">
+            <input type="number" id="mp-precio" placeholder="Precio ($)">
+            <button onclick="añadirMateriaPrima()">Añadir Materia Prima</button>
+        </div>
+        <div>
+            <button onclick="guardarMateriasPrimas()">Guardar Materias Primas</button>
+            <button onclick="cargarMateriasPrimas()">Cargar Materias Primas</button>
+        </div>
+        <div id="lista-materias-primas"></div>
+    </div>
+
+    <!-- Sección para introducir el NPK deseado -->
+    <h2>NPK Deseado</h2>
+    <input type="number" id="npk-nitrogeno" placeholder="Nitrógeno deseado (%)">
+    <input type="number" id="npk-fosforo" placeholder="Fósforo deseado (%)">
+    <input type="number" id="npk-potasio" placeholder="Potasio deseado (%)">
+    <button onclick="calcularNPK()">Calcular NPK</button>
+
+    <div id="resultado-npk"></div>
+
+    <!-- Sección de Cultivos -->
+    <h2>Cultivos</h2>
+    <div id="cultivos">
+        <!-- Formulario para añadir cultivos -->
+        <div>
+            <h3>Añadir Cultivo</h3>
+            <input type="text" id="cultivo-nombre" placeholder="Nombre del cultivo">
+            <input type="number" id="cultivo-nitrogeno" placeholder="Nitrógeno necesario (kg/ha)">
+            <input type="number" id="cultivo-fosforo" placeholder="Fósforo necesario (kg/ha)">
+            <input type="number" id="cultivo-potasio" placeholder="Potasio necesario (kg/ha)">
+            <button onclick="añadirCultivo()">Añadir Cultivo</button>
+        </div>
+        <div>
+            <button onclick="guardarCultivos()">Guardar Cultivos</button>
+            <button onclick="cargarCultivos()">Cargar Cultivos</button>
+        </div>
+        <div id="lista-cultivos"></div>
+    </div>
+
+    <!-- Sección para calcular kg/ha -->
+    <h2>Cálculo de kg/ha</h2>
+    <select id="seleccionar-cultivo">
+        <option value="">Selecciona un cultivo</option>
+    </select>
+    <button onclick="calcularKgPorHectarea()">Calcular kg/ha</button>
+    <div id="resultado-kg-por-hectarea"></div>
+
+    <!-- Incluir librerías externas -->
+    <!-- Librería para optimización lineal -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/javascript-lp-solver/0.2.0/solver.js"></script>
+
+    <!-- Código JavaScript -->
+    <script>
+        // Variables globales
+        let materiasPrimas = [];
+        let cultivos = [];
+
+        // Funciones JavaScript irán aquí
+    </script>
+</body>
+</html>
