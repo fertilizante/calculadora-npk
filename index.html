@@ -112,7 +112,311 @@ th, td {
         let materiasPrimas = [];
         let cultivos = [];
 
-        // Funciones JavaScript irán aquí
+       function añadirMateriaPrima() {
+    let nombre = document.getElementById('mp-nombre').value.trim();
+    let nitrogeno = parseFloat(document.getElementById('mp-nitrogeno').value);
+    let fosforo = parseFloat(document.getElementById('mp-fosforo').value);
+    let potasio = parseFloat(document.getElementById('mp-potasio').value);
+    let materiaOrganica = parseFloat(document.getElementById('mp-materia-organica').value);
+    let precio = parseFloat(document.getElementById('mp-precio').value);
+
+    // Validar entradas
+    if (!nombre || isNaN(nitrogeno) || isNaN(fosforo) || isNaN(potasio) || isNaN(materiaOrganica) || isNaN(precio)) {
+        alert('Por favor, completa todos los campos con valores válidos.');
+        return;
+    }
+
+    let materiaPrima = {
+        nombre,
+        nitrogeno,
+        fosforo,
+        potasio,
+        materiaOrganica,
+        precio
+    };
+
+    materiasPrimas.push(materiaPrima);
+    mostrarMateriasPrimas();
+
+    // Limpiar campos
+    document.getElementById('mp-nombre').value = '';
+    document.getElementById('mp-nitrogeno').value = '';
+    document.getElementById('mp-fosforo').value = '';
+    document.getElementById('mp-potasio').value = '';
+    document.getElementById('mp-materia-organica').value = '';
+    document.getElementById('mp-precio').value = '';
+}
+function mostrarMateriasPrimas() {
+    let lista = document.getElementById('lista-materias-primas');
+    lista.innerHTML = '';
+
+    if (materiasPrimas.length > 0) {
+        lista.innerHTML = `
+            <table>
+                <tr>
+                    <th>Seleccionar</th>
+                    <th>Nombre</th>
+                    <th>N (%)</th>
+                    <th>P (%)</th>
+                    <th>K (%)</th>
+                    <th>MO (%)</th>
+                    <th>Precio ($)</th>
+                    <th>Acciones</th>
+                </tr>
+        `;
+
+        materiasPrimas.forEach((mp, index) => {
+            lista.innerHTML += `
+                <tr>
+                    <td><input type="checkbox" id="mp-select-${index}" checked></td>
+                    <td>${mp.nombre}</td>
+                    <td>${mp.nitrogeno}</td>
+                    <td>${mp.fosforo}</td>
+                    <td>${mp.potasio}</td>
+                    <td>${mp.materiaOrganica}</td>
+                    <td>${mp.precio}</td>
+                    <td><button onclick="eliminarMateriaPrima(${index})">Eliminar</button></td>
+                </tr>
+            `;
+        });
+
+        lista.innerHTML += `</table>`;
+    } else {
+        lista.innerHTML = '<p>No hay materias primas añadidas.</p>';
+    }
+}
+function eliminarMateriaPrima(index) {
+    materiasPrimas.splice(index, 1);
+    mostrarMateriasPrimas();
+}
+function guardarMateriasPrimas() {
+    localStorage.setItem('materiasPrimas', JSON.stringify(materiasPrimas));
+    alert('Materias primas guardadas.');
+}
+
+function cargarMateriasPrimas() {
+    let data = localStorage.getItem('materiasPrimas');
+    if (data) {
+        materiasPrimas = JSON.parse(data);
+        mostrarMateriasPrimas();
+    } else {
+        alert('No hay materias primas guardadas.');
+    }
+}
+function añadirCultivo() {
+    let nombre = document.getElementById('cultivo-nombre').value.trim();
+    let nitrogeno = parseFloat(document.getElementById('cultivo-nitrogeno').value);
+    let fosforo = parseFloat(document.getElementById('cultivo-fosforo').value);
+    let potasio = parseFloat(document.getElementById('cultivo-potasio').value);
+
+    // Validar entradas
+    if (!nombre || isNaN(nitrogeno) || isNaN(fosforo) || isNaN(potasio)) {
+        alert('Por favor, completa todos los campos con valores válidos.');
+        return;
+    }
+
+    let cultivo = {
+        nombre,
+        nitrogeno,
+        fosforo,
+        potasio
+    };
+
+    cultivos.push(cultivo);
+    mostrarCultivos();
+    actualizarSeleccionCultivos();
+
+    // Limpiar campos
+    document.getElementById('cultivo-nombre').value = '';
+    document.getElementById('cultivo-nitrogeno').value = '';
+    document.getElementById('cultivo-fosforo').value = '';
+    document.getElementById('cultivo-potasio').value = '';
+}
+function mostrarCultivos() {
+    let lista = document.getElementById('lista-cultivos');
+    lista.innerHTML = '';
+
+    if (cultivos.length > 0) {
+        lista.innerHTML = `
+            <table>
+                <tr>
+                    <th>Nombre</th>
+                    <th>N (kg/ha)</th>
+                    <th>P (kg/ha)</th>
+                    <th>K (kg/ha)</th>
+                    <th>Acciones</th>
+                </tr>
+        `;
+
+        cultivos.forEach((c, index) => {
+            lista.innerHTML += `
+                <tr>
+                    <td>${c.nombre}</td>
+                    <td>${c.nitrogeno}</td>
+                    <td>${c.fosforo}</td>
+                    <td>${c.potasio}</td>
+                    <td><button onclick="eliminarCultivo(${index})">Eliminar</button></td>
+                </tr>
+            `;
+        });
+
+        lista.innerHTML += `</table>`;
+    } else {
+        lista.innerHTML = '<p>No hay cultivos añadidos.</p>';
+    }
+}
+function eliminarCultivo(index) {
+    cultivos.splice(index, 1);
+    mostrarCultivos();
+    actualizarSeleccionCultivos();
+}
+function guardarCultivos() {
+    localStorage.setItem('cultivos', JSON.stringify(cultivos));
+    alert('Cultivos guardados.');
+}
+
+function cargarCultivos() {
+    let data = localStorage.getItem('cultivos');
+    if (data) {
+        cultivos = JSON.parse(data);
+        mostrarCultivos();
+        actualizarSeleccionCultivos();
+    } else {
+        alert('No hay cultivos guardadas.');
+    }
+}
+function actualizarSeleccionCultivos() {
+    let select = document.getElementById('seleccionar-cultivo');
+    select.innerHTML = '<option value="">Selecciona un cultivo</option>';
+    cultivos.forEach((c, index) => {
+        select.innerHTML += `<option value="${index}">${c.nombre}</option>`;
+    });
+}
+function calcularNPK() {
+    let nDeseado = parseFloat(document.getElementById('npk-nitrogeno').value);
+    let pDeseado = parseFloat(document.getElementById('npk-fosforo').value);
+    let kDeseado = parseFloat(document.getElementById('npk-potasio').value);
+
+    // Validar entradas
+    if (isNaN(nDeseado) || isNaN(pDeseado) || isNaN(kDeseado)) {
+        alert('Por favor, introduce valores válidos para NPK deseado.');
+        return;
+    }
+
+    // Filtrar materias primas seleccionadas
+    let materiasSeleccionadas = materiasPrimas.filter((mp, index) => {
+        return document.getElementById(`mp-select-${index}`).checked;
+    });
+
+    if (materiasSeleccionadas.length === 0) {
+        alert('Por favor, selecciona al menos una materia prima.');
+        return;
+    }
+
+    // Crear el modelo de optimización
+    let model = {
+        optimize: "coste",
+        opType: "min",
+        constraints: {
+            nitrogeno: { equal: nDeseado },
+            fosforo: { equal: pDeseado },
+            potasio: { equal: kDeseado },
+            totalPorcentaje: { equal: 100 }
+        },
+        variables: {},
+        ints: {},
+    };
+
+    // Añadir variables (materias primas seleccionadas)
+    materiasSeleccionadas.forEach((mp, index) => {
+        let variableName = `mp${index}`;
+        model.variables[variableName] = {
+            coste: mp.precio,
+            nitrogeno: mp.nitrogeno,
+            fosforo: mp.fosforo,
+            potasio: mp.potasio,
+            totalPorcentaje: 1
+        };
+        // Puedes agregar restricciones enteras si es necesario
+        // model.ints[variableName] = 1;
+    });
+
+    // Resolver el modelo
+    let results = solver.Solve(model);
+
+    // Verificar si hay una solución factible
+    if (results.feasible) {
+        let resultado = document.getElementById('resultado-npk');
+        resultado.innerHTML = `<h3>Resultados:</h3>`;
+
+        let totalMO = 0;
+        let totalPrecio = 0;
+
+        // Mostrar las proporciones de cada materia prima
+        materiasSeleccionadas.forEach((mp, index) => {
+            let variableName = `mp${index}`;
+            let porcentaje = results[variableName] || 0;
+            totalMO += (mp.materiaOrganica * porcentaje) / 100;
+            totalPrecio += (mp.precio * porcentaje) / 100;
+
+            resultado.innerHTML += `
+                ${mp.nombre}: ${porcentaje.toFixed(2)}%<br>
+            `;
+        });
+
+        resultado.innerHTML += `<br>
+            Nitrógeno resultante: ${nDeseado}%<br>
+            Fósforo resultante: ${pDeseado}%<br>
+            Potasio resultante: ${kDeseado}%<br>
+            Materia Orgánica resultante: ${totalMO.toFixed(2)}%<br>
+            Precio estimado: ${totalPrecio.toFixed(2)}$
+        `;
+
+        // Almacenar el NPK resultante para uso posterior
+        window.npkResultante = {
+            nitrogeno: nDeseado,
+            fosforo: pDeseado,
+            potasio: kDeseado
+        };
+    } else {
+        alert('No es posible fabricar el NPK deseado con las materias primas seleccionadas.');
+    }
+}
+function calcularKgPorHectarea() {
+    let indiceCultivo = document.getElementById('seleccionar-cultivo').value;
+    if (indiceCultivo === '') {
+        alert('Selecciona un cultivo.');
+        return;
+    }
+
+    if (!window.npkResultante) {
+        alert('Por favor, calcula primero el NPK resultante.');
+        return;
+    }
+
+    let cultivo = cultivos[indiceCultivo];
+
+    let nFertilizante = window.npkResultante.nitrogeno;
+    let pFertilizante = window.npkResultante.fosforo;
+    let kFertilizante = window.npkResultante.potasio;
+
+    // Validar que el NPK del fertilizante no sea cero para evitar división por cero
+    if (nFertilizante === 0 || pFertilizante === 0 || kFertilizante === 0) {
+        alert('El NPK del fertilizante no puede ser cero. Ajusta las materias primas o el NPK deseado.');
+        return;
+    }
+
+    let kgPorHectareaN = cultivo.nitrogeno / (nFertilizante / 100);
+    let kgPorHectareaP = cultivo.fosforo / (pFertilizante / 100);
+    let kgPorHectareaK = cultivo.potasio / (kFertilizante / 100);
+
+    // Tomamos el valor más alto para asegurar que se cubren todas las necesidades
+    let kgPorHectarea = Math.max(kgPorHectareaN, kgPorHectareaP, kgPorHectareaK);
+
+    let resultado = document.getElementById('resultado-kg-por-hectarea');
+    resultado.innerHTML = `Cantidad adecuada a utilizar: ${kgPorHectarea.toFixed(2)} kg/ha`;
+}
+
     </script>
 </body>
 </html>
